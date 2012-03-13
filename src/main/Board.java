@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 /**
- * La Classe Board est le tableau de contrôle de notre application C'est ici que
+ * La Classe Board est le tableau de contrÃ´le de notre application C'est ici que
  * tout va se faire.
  * 
  * @author kai
