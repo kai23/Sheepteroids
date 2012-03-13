@@ -42,7 +42,7 @@ public class Board extends JPanel implements ActionListener {
 	private int B_HEIGHT;
 
 	// Les constantes de notre application
-	private final int VITESSEJEU = 35;
+	private final int VITESSEJEU = 20;
 	private int NBMOUTONS    ;
 	private static final int NBMOUTONSDEDOUBLEMENT = 2;
 	private int nbVie;
