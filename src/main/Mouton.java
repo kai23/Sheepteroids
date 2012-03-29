@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
 import javax.imageio.ImageIO;
 
 /**
@@ -14,14 +15,17 @@ import javax.imageio.ImageIO;
  * @author kai
  * 
  */
-public class Mouton {
+public class Mouton extends Thread {
 
 	// Attention, plus la vitesse est grande, plus la vitesse de rotation est
 	// petite
 	private static final double VITESSEROTATION = 50;
 	private static final double VITESSEMOUTON = 1;
+        
+        private Board board;
 
 	// Nos variables de placement
+        // Passer les variables en transient
 	private int x, y;
 	double dy, dx, spin;
 	double scaleX, scaleY;
@@ -36,6 +40,24 @@ public class Mouton {
 	private int random = (int) (Math.random() * (higher - lower)) + lower;
 	private boolean visible;
 
+        //Boucle 1 du mouton
+        public void run() {
+            
+            try
+            {
+                while(this.isVisible())
+                {
+                    this.move();
+                    //board.repaint();
+                    Thread.sleep(25);
+                }
+            }
+            catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        
 	/**
 	 * Notre constructeur de mouton
 	 * 
@@ -48,11 +70,7 @@ public class Mouton {
 	 * @throws IOException
 	 *             : si on ne trouve pas le fichier
 	 */
-	public Mouton(double scale, int x, int y) throws IOException {
-		if (scale < 0.25) {
-			visible = false;
-			return;
-		}
+	public Mouton(Board board, double scale, int x, int y) throws IOException {
 		if (scale < 1) {
 			this.x = x;
 			this.y = y;
@@ -77,6 +95,8 @@ public class Mouton {
 			dy += 1;
 		}
 		visible = true;
+                
+                this.board = board;
 	}
 
 	/**

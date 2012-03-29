@@ -43,7 +43,7 @@ public class Board extends JPanel implements ActionListener {
 
 	// Les constantes de notre application
 	private final int VITESSEJEU = 20;
-	private int NBMOUTONS    ;
+	private int NBMOUTONS ;
 	private static final int NBMOUTONSDEDOUBLEMENT = 2;
 	private int nbVie;
 	
@@ -68,11 +68,11 @@ public class Board extends JPanel implements ActionListener {
 		
 		this.scoreLevel = scoreLevel;
 		this.scoreTotal = scoreTotal;
-		this.NBMOUTONS = level;
+		this.NBMOUTONS = 2;
 		this.nbVie = nbVie;
 		this.m = m;
 		// On cr�e le vaisseau
-		vaisseau = new Vaisseau();
+		vaisseau = new Vaisseau(this);
 
 		// ... et nos moutons
 		initMouton();
@@ -98,7 +98,9 @@ public class Board extends JPanel implements ActionListener {
 	public void initMouton() throws IOException {
 		mouton = new ArrayList<Mouton>();
 		for (int i = 0; i < NBMOUTONS; i++) {
-			mouton.add(new Mouton(1.0, 0, 0));
+                        Mouton mout = new Mouton(this, 1.0, 0, 0);
+			mouton.add(mout);
+                        mout.start();
 		}
 	}
 
@@ -106,32 +108,6 @@ public class Board extends JPanel implements ActionListener {
 	 * C'est ici qu'on définit ce qui va être repeint.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		// On récupère les missiles
-		ms = vaisseau.getMissiles();
-
-		// Pour chaque missile
-		for (int i = 0; i < ms.size(); i++) {
-
-			// On le r�cup�re
-			Missile m = (Missile) ms.get(i);
-
-			// S'il est visible
-			if (m.isVisible())
-				// On le bouge
-				m.move();
-			else
-				// Sinon, on le supprime de la liste
-				ms.remove(i);
-		}
-
-		// On fait exactement la même chose avec les moutons
-		for (int i = 0; i < mouton.size(); i++) {
-			Mouton a = (Mouton) mouton.get(i);
-			if (a.isVisible())
-				a.move();
-			else
-				mouton.remove(i);
-		}
 
 		// On vérifie s'il y a collision
 		try {
@@ -189,15 +165,21 @@ public class Board extends JPanel implements ActionListener {
 				if (r3.intersects(r4)) {
 					m.setVisible(false);
 					a.setVisible(false);
+                                        mouton.remove(a);
 
 					// On définit une nouvelle taille
 					double nouvelleTaille = a.getScaleX() / 2;
 
-					// On crée nos moutons
-					for (int k = 0; k < NBMOUTONSDEDOUBLEMENT; k++) {
-						mouton.add(new Mouton(nouvelleTaille, a.getX(), a
-								.getY()));
-					}
+                                        if (nouvelleTaille >= 0.25)
+                                        {
+                                            // On crée nos moutons
+                                            for (int k = 0; k < NBMOUTONSDEDOUBLEMENT; k++) {
+                                                    Mouton mout = new Mouton(this, nouvelleTaille, a.getX(), a
+                                                                    .getY());
+                                                    mouton.add(mout);
+                                                    mout.start();
+                                            }
+                                        }
 
 					// Et pour éviter de se taper une exception de type
 					// ConcurrentModificationException

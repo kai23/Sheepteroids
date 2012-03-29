@@ -15,18 +15,37 @@ import javax.imageio.ImageIO;
  * @author kai
  *
  */
-public class Missile {
+public class Missile extends Thread {
 
 	// Le coefficient de tir
-	private double x, y;
+	private transient double x, y;
+        
+        private Board board;
 
 	// La direction du tir
-	private double dx, dy;
+	private transient double dx, dy;
 
 	// Notre image
 	private BufferedImage image;
 	boolean visible;
 	private int width, height;
+        
+                //Boucle 1 du mouton
+        public void run() {
+            
+            try
+            {
+                while(this.isVisible())
+                {
+                    this.move();
+                    Thread.sleep(25);
+                }
+            }
+            catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
 
 	/**
 	 * Le constructeur de missile
@@ -35,17 +54,19 @@ public class Missile {
 	 * @param angle : l'angle du missile
 	 * @throws IOException : si on ne trouve pas le fichier
 	 */
-	public Missile(double x, double y, int angle) throws IOException {
+	public Missile(Board board, double x, double y, int angle) throws IOException {
 		
 		this.image = ImageIO.read(getClass().getResource("missile.png"));
 		this.width = image.getWidth();
 		this.height = image.getHeight();
 		
 		this.x = x;
-        this.y = y;
-        this.dx = 10 * Math.cos(2 * Math.PI * (angle - 90) / 360);
-        this.dy = 10 * Math.sin(2 * Math.PI * (angle - 90) / 360);
+                this.y = y;
+                this.dx = 10 * Math.cos(2 * Math.PI * (angle - 90) / 360);
+                this.dy = 10 * Math.sin(2 * Math.PI * (angle - 90) / 360);
 		visible = true;
+                
+                this.board = board;
 	}
 	
 	/**
@@ -66,8 +87,9 @@ public class Missile {
 		y += dy;
 
 		if (this.x > 550 || this.x < 0 || this.y > 400 || this.y < 0) {
-	        this.visible = false;
+                    this.visible = false;
 		}
+                
 	}
 
 	/* Les getteurs / setteurs */

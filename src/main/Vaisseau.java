@@ -32,6 +32,8 @@ public class Vaisseau  {
 	
 	// Le temps entre deux tirs.
 	private static final long VITESSETIR = 400;
+        
+        private Board board;
 	
 	private long start;
 	private long dernierTir;
@@ -58,7 +60,7 @@ public class Vaisseau  {
 	 * Constructeur de notre vaisseau
 	 * @throws IOException
 	 */
-	public Vaisseau() throws IOException {
+	public Vaisseau(Board board) throws IOException {
 		
 		// On initialise les missiles
 		missiles = new ArrayList<Missile>();
@@ -75,6 +77,8 @@ public class Vaisseau  {
 		dernierTir = System.currentTimeMillis();;
 		// Puis on le rends visible
 		visible = true;
+                
+                board = board;
 		
 	}
 
@@ -99,8 +103,10 @@ public class Vaisseau  {
 		if (start - dernierTir > VITESSETIR ) {
 			dernierTir = System.currentTimeMillis();
 			try {
-				missiles.add(new Missile(x + image.getWidth(null) / 2, y
-						+ image.getHeight(null) / 2, angle));
+                            Missile miss = new Missile(board, x + image.getWidth(null) / 2, y
+						+ image.getHeight(null) / 2, angle);
+                            missiles.add(miss);
+                            miss.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
