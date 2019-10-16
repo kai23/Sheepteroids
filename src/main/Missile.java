@@ -25,6 +25,8 @@ public class Missile extends Thread {
 	// La direction du tir
 	private transient double dx, dy;
 
+	public boolean toDie = false;
+
 	// Notre image
 	private BufferedImage image;
 	boolean visible;
@@ -86,8 +88,8 @@ public class Missile extends Thread {
 		x += dx;
 		y += dy;
 
-		if (this.x > 550 || this.x < 0 || this.y > 400 || this.y < 0) {
-                    this.visible = false;
+		if (this.x > 600 || this.x < -10 || this.y > 450 || this.y < -10) {
+                    this.toDie = true;
 		}
                 
 	}
