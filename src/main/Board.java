@@ -164,44 +164,44 @@ public class Board extends JPanel implements ActionListener {
 
         // Collision entre missile - mouton
 		for (int i = 0; i < ms.size(); i++) {
+            if (i >= 0) {
+                Missile m = (Missile) ms.get(i);
+                Rectangle r3 = m.getBounds();
 
-            Missile m = (Missile) ms.get(i);
-            Rectangle r3 = m.getBounds();
+                for (int j = 0; j < mouton.size(); j++) {
+                    Mouton a = (Mouton) mouton.get(j);
+                    Rectangle r4 = a.getBounds();
 
-            for (int j = 0; j < mouton.size(); j++) {
-                Mouton a = (Mouton) mouton.get(j);
-                Rectangle r4 = a.getBounds();
+                    // Si on a une collision
+                    if (r3.intersects(r4)) {
+                        m.setVisible(false);
+                        a.setVisible(false);
+                        mouton.remove(a);
+                        ms.remove(m);
+                        j = mouton.size();
+                        i--;
 
-                // Si on a une collision
-                if (r3.intersects(r4)) {
-                    m.setVisible(false);
-                    a.setVisible(false);
-                    mouton.remove(a);
-                    ms.remove(m);
-                    j=mouton.size();
-                    i--;
+                        // On définit une nouvelle taille
+                        double nouvelleTaille = a.getScaleX() / 2;
 
-                    // On définit une nouvelle taille
-                    double nouvelleTaille = a.getScaleX() / 2;
-
-                    if (nouvelleTaille >= 0.25) {
-                        // On crée nos moutons
-                        for (int k = 0; k < NBMOUTONSDEDOUBLEMENT; k++) {
-                            Mouton mout = new Mouton(this, nouvelleTaille, a.getX(), a
-                                    .getY());
-                            mouton.add(mout);
-                            mout.start();
+                        if (nouvelleTaille >= 0.25) {
+                            // On crée nos moutons
+                            for (int k = 0; k < NBMOUTONSDEDOUBLEMENT; k++) {
+                                Mouton mout = new Mouton(this, nouvelleTaille, a.getX(), a
+                                        .getY());
+                                mouton.add(mout);
+                                mout.start();
+                            }
                         }
+
+                        scoreLevel += 10;
+                        scoreTotal += 10;
+
                     }
-
-                    scoreLevel += 10;
-                    scoreTotal += 10;
-
                 }
+
             }
-
         }
-
     }
 
     /**
